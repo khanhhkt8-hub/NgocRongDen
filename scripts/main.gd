@@ -2,10 +2,14 @@ extends Node2D
 
 var status_label: Label
 var hint_label: Label
+const MOBILE_CONTROLS = preload("res://scripts/mobile_controls.gd")
 
 func _ready() -> void:
     _build_environment()
     _build_hud()
+    var mobile_controls = MOBILE_CONTROLS.new()
+    mobile_controls.name = "MobileControls"
+    add_child(mobile_controls)
     var player = get_node_or_null("Player")
     if player:
         player.stats_changed.connect(_on_stats_changed)
@@ -50,6 +54,8 @@ func _build_hud() -> void:
     hint_label = Label.new()
     hint_label.position = Vector2(24, 62)
     hint_label.text = "A/D: Di chuyển    SPACE: Nhảy    J: Bắn năng lượng"
+    if OS.has_feature("mobile"):
+        hint_label.text = "Dùng các nút cảm ứng ở hai góc màn hình để điều khiển"
     hint_label.add_theme_font_size_override("font_size", 18)
     hint_label.add_theme_color_override("font_color", Color(0.75, 0.88, 1))
     layer.add_child(hint_label)
