@@ -5,6 +5,7 @@ var hint_label: Label
 var zone_label: Label
 var quest_label: Label
 var message_label: Label
+var inventory_label: Label
 const MOBILE_CONTROLS = preload("res://scripts/mobile_controls.gd")
 const WORLD_SYSTEM = preload("res://scripts/world_system.gd")
 
@@ -22,7 +23,9 @@ func _ready() -> void:
     var player = get_node_or_null("Player")
     if player:
         player.stats_changed.connect(_on_stats_changed)
+        player.inventory_changed.connect(_on_inventory_changed)
         _on_stats_changed()
+        _on_inventory_changed()
 
 func _build_environment() -> void:
     var sky := Polygon2D.new()
@@ -73,6 +76,11 @@ func _build_hud() -> void:
     message_label.add_theme_font_size_override("font_size", 16)
     message_label.add_theme_color_override("font_color", Color(0.85, 0.95, 1.0))
     layer.add_child(message_label)
+    inventory_label = Label.new()
+    inventory_label.position = Vector2(24, 238)
+    inventory_label.add_theme_font_size_override("font_size", 16)
+    inventory_label.add_theme_color_override("font_color", Color(0.70, 1.0, 0.76))
+    layer.add_child(inventory_label)
     hint_label = Label.new()
     hint_label.position = Vector2(24, 670)
     hint_label.text = "A/D: Di chuyen    SPACE: Nhay    J: Danh    K: Chuong KI    E: Tuong tac"
@@ -94,9 +102,14 @@ func _on_stats_changed() -> void:
         return
     status_label.text = "HP %d/%d    KI %d/%d\nCap %d    Suc manh %d    Tan cong %d    Giap %d\nTiem nang: %d    EXP: %d/%d" % [
         player.hp, player.max_hp, player.ki, player.max_ki,
-        player.level, player.power, player.strength, player.defense,
+        player.level, player.power, player.strength + player.weapon_bonus, player.defense,
         player.potential, player.exp_points, player.level * 100
     ]
+
+func _on_inventory_changed() -> void:
+    var player = get_node_or_null("Player")
+    if player and is_instance_valid(inventory_label):
+        inventory_label.text = player.inventory_summary()
 
 func _on_world_status_changed(zone_name: String, quest_text: String, message: String) -> void:
     if is_instance_valid(zone_label):
