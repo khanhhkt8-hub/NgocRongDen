@@ -15,6 +15,9 @@ An original 2D side-scrolling online RPG project built with **Godot 4**, targeti
 - Item database with six functional equipment slots (weapon, body, pants, gloves, boots, scanner)
 - Touch-friendly inventory/equipment panel toggled with I on desktop or TÚI ĐỒ on mobile
 - Equip/unequip flow with stat recalculation, plus usable HP/KI recovery consumables
+- Equipment enhancement up to +10, consuming upgrade stones, crystals at higher levels, and coins
+- Enhancement success chance decreases by level; failure consumes materials/currency but does not destroy or downgrade gear
+- Enhancement bonuses recalculate attack, defense, HP, KI, and power immediately
 - Monster drops include coins, upgrade materials, recovery items, and low-chance equipment
 - Touch interaction button for Android NPC quests
 - Keyboard controls for desktop testing
@@ -36,7 +39,7 @@ An original 2D side-scrolling online RPG project built with **Godot 4**, targeti
 4. Press **F6** or **F5** to run the main scene.
 
 ## Project status
-This is an evolving offline gameplay prototype, not yet a complete MMORPG. The three-zone travel loop and a basic NPC quest are implemented in source. Online accounts, authoritative multiplayer server, persistence, matchmaking, chat, PvP, equipment upgrade interface, item selling, shop, boss-specific loot tables, persistence, bosses, polished art/animation, online server, and Android export configuration remain future milestones. The latest changes have not yet been run or validated in the Godot editor.
+This is an evolving offline gameplay prototype, not yet a complete MMORPG. The three-zone travel loop and a basic NPC quest are implemented in source. Online accounts, authoritative multiplayer server, persistence, matchmaking, chat, PvP, item selling, shop, boss-specific loot tables, persistence, bosses, polished art/animation, online server, and Android export configuration remain future milestones. The latest changes have not yet been run or validated in the Godot editor.
 
 ## Structure
 - `scenes/`: playable game scenes
@@ -55,3 +58,7 @@ Item categories, equipment slots, drop progression, consumables, upgrades, and i
 
 
 The inventory panel is an early functional implementation: item rows show names, counts, descriptions, and allow equipping gear or consuming recovery items. Visual icons, drag-and-drop, selling, upgrades, and save persistence are not implemented yet.
+
+
+## Equipment enhancement (prototype)
+Open the inventory with **I** or the mobile **TÚI ĐỒ** button. Choose an occupied gear slot and press **NÂNG CẤP**. Enhancement costs coins and upgrade stones; levels +4 and above also require crystals. The maximum is +10. A failed attempt consumes the materials and coins but does not destroy or downgrade the item. These are original prototype balance values and still need playtesting.
