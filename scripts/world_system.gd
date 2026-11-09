@@ -4,9 +4,9 @@ signal world_status_changed(zone_name: String, quest_text: String, message: Stri
 signal zone_changed(zone_index: int)
 
 const ZONES := [
-    {"name": "THUNG LUNG BINH MINH", "sky": Color(0.10, 0.19, 0.30), "ground": Color(0.20, 0.36, 0.27), "enemy_hp": 40, "exp": 25},
-    {"name": "RUNG CO MAY", "sky": Color(0.08, 0.24, 0.22), "ground": Color(0.24, 0.34, 0.20), "enemy_hp": 65, "exp": 40},
-    {"name": "HOANG MAC DO", "sky": Color(0.30, 0.17, 0.12), "ground": Color(0.39, 0.27, 0.16), "enemy_hp": 90, "exp": 60}
+    {"name": "THUNG LUNG BINH MINH", "sky": Color(0.10, 0.19, 0.30), "ground": Color(0.20, 0.36, 0.27), "enemy_hp": 40, "exp": 25, "enemy_speed": 95.0, "enemy_damage": 8, "enemy_color": Color(0.82, 0.24, 0.32), "enemy_title": "Tieu quai"},
+    {"name": "RUNG CO MAY", "sky": Color(0.08, 0.24, 0.22), "ground": Color(0.24, 0.34, 0.20), "enemy_hp": 65, "exp": 40, "enemy_speed": 115.0, "enemy_damage": 13, "enemy_color": Color(0.28, 0.68, 0.35), "enemy_title": "Da thu"},
+    {"name": "HOANG MAC DO", "sky": Color(0.30, 0.17, 0.12), "ground": Color(0.39, 0.27, 0.16), "enemy_hp": 90, "exp": 60, "enemy_speed": 130.0, "enemy_damage": 18, "enemy_color": Color(0.85, 0.52, 0.20), "enemy_title": "Sa mac chien binh"}
 ]
 var zone_index := 0
 var quest_active := false
@@ -80,6 +80,12 @@ func _travel_to_next_zone() -> void:
         enemy.max_hp = int(zone["enemy_hp"])
         enemy.hp = enemy.max_hp
         enemy.exp_reward = int(zone["exp"])
+        enemy.move_speed = float(zone["enemy_speed"])
+        enemy.contact_damage = int(zone["enemy_damage"])
+        enemy.enemy_title = String(zone["enemy_title"])
+        var body = enemy.get_node_or_null("Body")
+        if body:
+            body.color = zone["enemy_color"]
     status_message = "Ban da den: %s" % ZONES[zone_index]["name"]
     zone_changed.emit(zone_index)
     _emit_status()
