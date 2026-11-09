@@ -37,6 +37,7 @@ var level: int = 1
 var coins: int = 0
 var inventory: Dictionary = {}
 var equipment: Dictionary = {"weapon": "", "body": "", "pants": "", "gloves": "", "boots": "", "head": ""}
+var equipment_levels: Dictionary = {"weapon": 0, "body": 0, "pants": 0, "gloves": 0, "boots": 0, "head": 0}
 var equipped_weapon: String = "Chưa có"
 var weapon_bonus: int = 0
 var equipment_attack: int = 0
@@ -130,6 +131,7 @@ func equip_item(item_id: String) -> bool:
 	if int(inventory[item_id]) <= 0:
 		inventory.erase(item_id)
 	equipment[slot] = item_id
+	equipment_levels[slot] = 0
 	_refresh_equipment_stats()
 	inventory_changed.emit()
 	stats_changed.emit()
@@ -174,11 +176,12 @@ func _refresh_equipment_stats() -> void:
 		var item_id := String(equipment.get(slot, ""))
 		if item_id != "" and ITEM_DB.has(item_id):
 			var data: Dictionary = ITEM_DB[item_id]
-			equipment_attack += int(data.get("attack", 0))
-			equipment_defense += int(data.get("defense", 0))
-			equipment_hp += int(data.get("hp", 0))
-			equipment_ki += int(data.get("ki", 0))
-			equipment_power += int(data.get("power", 0))
+			var upgrade_level := int(equipment_levels.get(slot, 0))
+			equipment_attack += int(data.get("attack", 0)) + upgrade_level * 2
+			equipment_defense += int(data.get("defense", 0)) + upgrade_level
+			equipment_hp += int(data.get("hp", 0)) + upgrade_level * 5
+			equipment_ki += int(data.get("ki", 0)) + upgrade_level * 3
+			equipment_power += int(data.get("power", 0)) + upgrade_level * 100
 	max_hp = 120 + (level - 1) * 12 + equipment_hp + potential_hp_bonus
 	max_ki = 100 + (level - 1) * 8 + equipment_ki + potential_ki_bonus
 	hp = mini(hp, max_hp)
@@ -186,6 +189,47 @@ func _refresh_equipment_stats() -> void:
 	weapon_bonus = equipment_attack
 	equipped_weapon = String(ITEM_DB[equipment["weapon"]]["name"]) if equipment["weapon"] != "" else "Chưa có"
 	power = 1000 + (level - 1) * 250 + equipment_power + strength * 50 + defense * 30
+
+
+func get_upgrade_info(slot: String) -> Dictionary:
+	if not equipment.has(slot) or String(equipment.get(slot, "")) == "":
+		return {"ok": false, "message": "Ô trang bị này đang trống."}
+	var current_level := int(equipment_levels.get(slot, 0))
+	if current_level >= 10:
+		return {"ok": false, "message": "Trang bị đã đạt cấp nâng tối đa +10."}
+	var stone_cost := 1 + int(current_level / 3)
+	var crystal_cost := 1 if current_level >= 3 else 0
+	var coin_cost := 100 + current_level * 150
+	var chance := maxi(30, 90 - current_level * 6)
+	return {"ok": true, "level": current_level, "next_level": current_level + 1, "stone": stone_cost, "crystal": crystal_cost, "coins": coin_cost, "chance": chance, "message": "Nâng lên +%d | %d%% thành công | cần %d đá, %d tinh thạch, %d xu." % [current_level + 1, chance, stone_cost, crystal_cost, coin_cost]}
+
+func upgrade_equipped(slot: String) -> String:
+	var info := get_upgrade_info(slot)
+	if not bool(info.get("ok", false)):
+		return String(info.get("message", "Không thể nâng cấp."))
+	if int(inventory.get("da_nang_cap", 0)) < int(info["stone"]):
+		return "Không đủ đá nâng cấp."
+	if int(inventory.get("tinh_thach", 0)) < int(info["crystal"]):
+		return "Không đủ tinh thạch."
+	if coins < int(info["coins"]):
+		return "Không đủ xu."
+	inventory["da_nang_cap"] = int(inventory["da_nang_cap"]) - int(info["stone"])
+	if int(inventory["da_nang_cap"]) <= 0:
+		inventory.erase("da_nang_cap")
+	if int(info["crystal"]) > 0:
+		inventory["tinh_thach"] = int(inventory["tinh_thach"]) - int(info["crystal"])
+		if int(inventory["tinh_thach"]) <= 0:
+			inventory.erase("tinh_thach")
+	coins -= int(info["coins"])
+	if randi_range(1, 100) <= int(info["chance"]):
+		equipment_levels[slot] = int(equipment_levels.get(slot, 0)) + 1
+		_refresh_equipment_stats()
+		inventory_changed.emit()
+		stats_changed.emit()
+		return "Nâng cấp thành công! Trang bị đạt +%d." % int(equipment_levels[slot])
+	inventory_changed.emit()
+	stats_changed.emit()
+	return "Nâng cấp thất bại. Trang bị giữ nguyên cấp, nguyên liệu và xu đã tiêu hao."
 
 func get_inventory_entries() -> Array:
 	var entries: Array = []
@@ -200,7 +244,8 @@ func get_equipment_summary() -> String:
 	for slot in EQUIPMENT_SLOTS:
 		var item_id := String(equipment.get(slot, ""))
 		var item_name := String(ITEM_DB[item_id]["name"]) if item_id != "" else "Trống"
-		lines.append("%s: %s" % [SLOT_NAMES[slot], item_name])
+		var level_text := " +%d" % int(equipment_levels.get(slot, 0)) if item_id != "" else ""
+		lines.append("%s: %s%s" % [SLOT_NAMES[slot], item_name, level_text])
 	return "\n".join(lines)
 
 func inventory_summary() -> String:
