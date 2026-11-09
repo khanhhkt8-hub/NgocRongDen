@@ -33,13 +33,15 @@ Match the *systems, categories, player flow, balance philosophy, and interaction
 - [x] Functional equipment slots and stat recalculation.
 - [x] Inventory/equipment panel with item counts and descriptions; tap/click to equip or consume.
 - [x] Monster drops include starter gear categories and recovery items at low probabilities.
-- [ ] Illustrated item icons/grid, detailed comparison tooltips, selling, and drag-and-drop.
+- [ ] Illustrated item icons/grid, detailed comparison tooltips, and drag-and-drop.
+- [x] Basic item selling from inventory for coins.
 - [x] Equipment enhancement interface with material/currency costs, success chance, +10 cap, and stat recalculation.
-- [ ] Shops, boss-specific tables, item selling, and persistence.
+- [x] Basic shop purchases and per-item selling connected to shared item database and coin currency.
+- [ ] NPC shopkeeper interaction, expanded shop stock, boss-specific tables, and persistence.
 
 ## Current implementation gap (must not be misrepresented)
 
-The current prototype now has basic functional gear slots, an inventory panel, equip/use actions, and expanded starter drops. It still does NOT have final item artwork/icons, drag-and-drop, item selling, shop, boss-specific drop tables, persistence, or player trading. Enhancement values are prototype balance and have not been playtested. Changes are committed but have not yet been run or validated in Godot.
+The current prototype now has basic functional gear slots, an inventory panel, equip/use actions, and expanded starter drops. It still does NOT have final item artwork/icons, drag-and-drop, expanded NPC shopkeeper interaction, boss-specific drop tables, persistence, or player trading. Basic buying and selling are implemented in the inventory panel. Enhancement values are prototype balance and have not been playtested. Changes are committed but have not yet been run or validated in Godot.
 
 ## Acceptance checklist
 
