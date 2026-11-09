@@ -3,6 +3,7 @@ extends CharacterBody2D
 @export var move_speed: float = 105.0
 @export var max_hp: int = 40
 @export var contact_damage: int = 10
+@export var exp_reward: int = 25
 
 var hp: int = 40
 var attack_timer: float = 0.0
@@ -10,6 +11,7 @@ var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 func _ready() -> void:
     hp = max_hp
+    add_to_group("enemies")
 
 func _physics_process(delta: float) -> void:
     if not is_on_floor():
@@ -33,6 +35,6 @@ func take_hit(damage: int) -> void:
     if hp <= 0:
         var players := get_tree().get_nodes_in_group("player")
         if players.size() > 0:
-            players[0].gain_exp(25)
+            players[0].gain_exp(exp_reward)
         hp = max_hp
         global_position = Vector2(randf_range(650.0, 1100.0), 565.0)
