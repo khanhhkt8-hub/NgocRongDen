@@ -109,9 +109,9 @@ func _build_hud() -> void:
 
 func _build_inventory_panel(layer: CanvasLayer) -> void:
 	inventory_panel = PanelContainer.new()
-	inventory_panel.position = Vector2(650, 95)
-	inventory_panel.size = Vector2(590, 540)
-	inventory_panel.custom_minimum_size = Vector2(590, 540)
+	inventory_panel.position = Vector2(650, 55)
+	inventory_panel.size = Vector2(590, 610)
+	inventory_panel.custom_minimum_size = Vector2(590, 610)
 	inventory_panel.visible = false
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color(0.025, 0.055, 0.10, 0.96)
@@ -174,7 +174,7 @@ func _build_inventory_panel(layer: CanvasLayer) -> void:
 	item_title.add_theme_color_override("font_color", Color(1.0, 0.84, 0.45))
 	root.add_child(item_title)
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(0, 270)
+	scroll.custom_minimum_size = Vector2(0, 220)
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root.add_child(scroll)
 	inventory_content = VBoxContainer.new()
