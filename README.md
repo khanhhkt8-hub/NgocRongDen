@@ -10,6 +10,9 @@ An original 2D side-scrolling online RPG project built with **Godot 4**, targeti
 - Three original zones with different monster strength and EXP rewards
 - Guide NPC with a 3-monster quest and EXP/potential rewards
 - Zone portal travel with zone-specific color palettes
+- Three monster archetypes with increasing HP, speed, damage, and EXP
+- Random collectible drops: coins, upgrade stones, crystals, and a starter weapon
+- Basic inventory counters, currency tracking, and automatic stronger-weapon equip
 - Touch interaction button for Android NPC quests
 - Keyboard controls for desktop testing
 - Original placeholder vector visuals; no copyrighted game assets
@@ -29,7 +32,7 @@ An original 2D side-scrolling online RPG project built with **Godot 4**, targeti
 4. Press **F6** or **F5** to run the main scene.
 
 ## Project status
-This is an evolving offline gameplay prototype, not yet a complete MMORPG. The three-zone travel loop and a basic NPC quest are implemented in source. Online accounts, authoritative multiplayer server, persistence, matchmaking, chat, PvP, equipment, bosses, polished art/animation, and Android export configuration remain future milestones. The latest changes have not yet been run or validated in the Godot editor.
+This is an evolving offline gameplay prototype, not yet a complete MMORPG. The three-zone travel loop and a basic NPC quest are implemented in source. Online accounts, authoritative multiplayer server, persistence, matchmaking, chat, PvP, full inventory/equipment UI, consumable items, bosses, polished art/animation, and Android export configuration remain future milestones. The latest changes have not yet been run or validated in the Godot editor.
 
 ## Structure
 - `scenes/`: playable game scenes
