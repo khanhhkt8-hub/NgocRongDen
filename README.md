@@ -30,3 +30,7 @@ This is the first playable foundation, not yet a complete MMORPG. Online account
 - `scripts/`: gameplay logic
 
 All names, characters, visuals, and code in this project are original placeholders and are not affiliated with any existing franchise.
+
+
+## Gameplay direction
+The target is a close genre-level experience to classic 2D side-scrolling MMORPGs such as Chú Bé Rồng Online: horizontal movement, combat, skills, HP/KI-style resource HUD, monster grinding, quests, NPCs, map travel, progression, bosses, and real multiplayer social systems. This is a gameplay reference only. NGỌC RỒNG ĐEN uses original characters, maps, names, art, audio, writing, and code. See [Gameplay Direction](docs/GAMEPLAY_DIRECTION.md).
