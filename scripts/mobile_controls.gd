@@ -10,8 +10,9 @@ func _ready() -> void:
     add_child(layer)
     _add_hold_button("◀", Vector2(34, -118), Vector2(112, 88), "move_left")
     _add_hold_button("▶", Vector2(158, -118), Vector2(112, 88), "move_right")
-    _add_tap_button("NHẢY", Vector2(-246, -118), Vector2(108, 88), "jump")
-    _add_tap_button("BẮN", Vector2(-126, -118), Vector2(108, 88), "attack")
+    _add_tap_button("NHẢY", Vector2(-372, -118), Vector2(108, 88), "jump")
+    _add_tap_button("ĐÁNH", Vector2(-252, -118), Vector2(108, 88), "attack")
+    _add_tap_button("CHƯỞNG", Vector2(-132, -118), Vector2(120, 88), "ki_blast")
 
 func _add_hold_button(caption: String, offset: Vector2, button_size: Vector2, action: String) -> void:
     var button := _make_button(caption, button_size)
@@ -47,7 +48,7 @@ func _make_button(caption: String, button_size: Vector2) -> Button:
     var button := Button.new()
     button.text = caption
     button.custom_minimum_size = button_size
-    button.add_theme_font_size_override("font_size", 24)
+    button.add_theme_font_size_override("font_size", 21)
     button.add_theme_color_override("font_color", Color.WHITE)
     button.add_theme_color_override("font_hover_color", Color.WHITE)
     button.add_theme_color_override("font_pressed_color", Color(0.6, 0.9, 1.0))
