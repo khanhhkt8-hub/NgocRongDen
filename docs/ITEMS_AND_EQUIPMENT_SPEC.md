@@ -34,11 +34,12 @@ Match the *systems, categories, player flow, balance philosophy, and interaction
 - [x] Inventory/equipment panel with item counts and descriptions; tap/click to equip or consume.
 - [x] Monster drops include starter gear categories and recovery items at low probabilities.
 - [ ] Illustrated item icons/grid, detailed comparison tooltips, selling, and drag-and-drop.
-- [ ] Equipment upgrade interface, shops, boss-specific tables, and persistence.
+- [x] Equipment enhancement interface with material/currency costs, success chance, +10 cap, and stat recalculation.
+- [ ] Shops, boss-specific tables, item selling, and persistence.
 
 ## Current implementation gap (must not be misrepresented)
 
-The current prototype now has basic functional gear slots, an inventory panel, equip/use actions, and expanded starter drops. It still does NOT have final item artwork/icons, drag-and-drop, item selling, upgrade interface, shop, boss-specific drop tables, persistence, or player trading. Changes are committed but have not yet been run or validated in Godot.
+The current prototype now has basic functional gear slots, an inventory panel, equip/use actions, and expanded starter drops. It still does NOT have final item artwork/icons, drag-and-drop, item selling, shop, boss-specific drop tables, persistence, or player trading. Enhancement values are prototype balance and have not been playtested. Changes are committed but have not yet been run or validated in Godot.
 
 ## Acceptance checklist
 
@@ -46,7 +47,7 @@ The current prototype now has basic functional gear slots, an inventory panel, e
 - [ ] Equipment panel with functional slots and stat recalculation.
 - [ ] Monster/map/boss-specific data-driven drop tables.
 - [ ] HP/KI consumables with actual use effects.
-- [ ] Equipment upgrade flow using materials and currency.
+- [x] Equipment upgrade flow using materials and currency.
 - [ ] NPC shop, quest rewards, and sell flow connected to the same item database.
 - [ ] Save/load inventory, equipment, currencies, and progression.
 - [ ] Android landscape usability review.
