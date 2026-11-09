@@ -6,7 +6,11 @@ An original 2D side-scrolling online RPG project built with **Godot 4**, targeti
 - Side-view player movement and jumping
 - Energy projectile attack
 - Chasing enemy with contact damage
-- HP, EXP, and level progression
+- HP, KI, strength, defense, potential, EXP, and level progression
+- Three original zones with different monster strength and EXP rewards
+- Guide NPC with a 3-monster quest and EXP/potential rewards
+- Zone portal travel with zone-specific color palettes
+- Touch interaction button for Android NPC quests
 - Keyboard controls for desktop testing
 - Original placeholder vector visuals; no copyrighted game assets
 
@@ -14,7 +18,9 @@ An original 2D side-scrolling online RPG project built with **Godot 4**, targeti
 - **A / Left Arrow**: move left
 - **D / Right Arrow**: move right
 - **Space**: jump
-- **J**: fire energy projectile
+- **J**: melee attack
+- **K**: fire energy projectile
+- **E**: interact with the guide NPC
 
 ## Run
 1. Install Godot 4.2 or newer.
@@ -23,7 +29,7 @@ An original 2D side-scrolling online RPG project built with **Godot 4**, targeti
 4. Press **F6** or **F5** to run the main scene.
 
 ## Project status
-This is the first playable foundation, not yet a complete MMORPG. Online accounts, authoritative multiplayer server, persistence, matchmaking, chat, PvP, quests, equipment, bosses, and Android export configuration remain future milestones.
+This is an evolving offline gameplay prototype, not yet a complete MMORPG. The three-zone travel loop and a basic NPC quest are implemented in source. Online accounts, authoritative multiplayer server, persistence, matchmaking, chat, PvP, equipment, bosses, polished art/animation, and Android export configuration remain future milestones. The latest changes have not yet been run or validated in the Godot editor.
 
 ## Structure
 - `scenes/`: playable game scenes
