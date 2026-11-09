@@ -18,6 +18,8 @@ An original 2D side-scrolling online RPG project built with **Godot 4**, targeti
 - Equipment enhancement up to +10, consuming upgrade stones, crystals at higher levels, and coins
 - Enhancement success chance decreases by level; failure consumes materials/currency but does not destroy or downgrade gear
 - Enhancement bonuses recalculate attack, defense, HP, KI, and power immediately
+- Basic NPC-style shop controls inside the inventory panel: buy HP/KI recovery, upgrade stones, and crystals with coins
+- Sell individual inventory items for a defined fraction of their shop value; equipped items cannot be sold because they are not in the bag
 - Monster drops include coins, upgrade materials, recovery items, and low-chance equipment
 - Touch interaction button for Android NPC quests
 - Keyboard controls for desktop testing
@@ -39,7 +41,7 @@ An original 2D side-scrolling online RPG project built with **Godot 4**, targeti
 4. Press **F6** or **F5** to run the main scene.
 
 ## Project status
-This is an evolving offline gameplay prototype, not yet a complete MMORPG. The three-zone travel loop and a basic NPC quest are implemented in source. Online accounts, authoritative multiplayer server, persistence, matchmaking, chat, PvP, item selling, shop, boss-specific loot tables, persistence, bosses, polished art/animation, online server, and Android export configuration remain future milestones. The latest changes have not yet been run or validated in the Godot editor.
+This is an evolving offline gameplay prototype, not yet a complete MMORPG. The three-zone travel loop and a basic NPC quest are implemented in source. Online accounts, authoritative multiplayer server, persistence, matchmaking, chat, PvP, boss-specific loot tables, persistence, bosses, polished art/animation, online server, and Android export configuration remain future milestones. The latest changes have not yet been run or validated in the Godot editor.
 
 ## Structure
 - `scenes/`: playable game scenes
@@ -57,7 +59,7 @@ The target is a close genre-level experience to classic 2D side-scrolling MMORPG
 Item categories, equipment slots, drop progression, consumables, upgrades, and inventory interactions must follow the recognizable gameplay structure of classic Ngoc Rong Online / Chu Be Rong Online. The project must not become a generic RPG item system. Exact proprietary names, sprites, icons, artwork, maps, and data are replaced with original content. See [Item & Equipment Standard](docs/ITEMS_AND_EQUIPMENT_SPEC.md).
 
 
-The inventory panel is an early functional implementation: item rows show names, counts, descriptions, and allow equipping gear or consuming recovery items. Visual icons, drag-and-drop, selling, upgrades, and save persistence are not implemented yet.
+The inventory panel is an early functional implementation: item rows show names, counts, descriptions, and allow equipping gear or consuming recovery items. Visual icons, drag-and-drop, advanced item icons, drag-and-drop, and save persistence are not implemented yet.
 
 
 ## Equipment enhancement (prototype)
