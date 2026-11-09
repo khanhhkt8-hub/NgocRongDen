@@ -16,6 +16,20 @@ const ITEM_DB := {
 	"da_nang_cap": {"name": "Đá nâng cấp", "type": "material", "description": "Nguyên liệu dùng để nâng cấp trang bị."},
 	"tinh_thach": {"name": "Tinh thạch", "type": "material", "description": "Nguyên liệu quý dùng trong chế tạo và nâng cấp."}
 }
+
+const SHOP_BUY_PRICES := {
+	"binh_hp_nho": 30,
+	"binh_ki_nho": 30,
+	"da_nang_cap": 80,
+	"tinh_thach": 180,
+	"ao_tap_su": 220,
+	"quan_tap_su": 160,
+	"gang_tap_su": 200,
+	"giay_tap_su": 160,
+	"rada_tap_su": 180,
+	"kiem_tan_thu": 260
+}
+
 const EQUIPMENT_SLOTS := ["weapon", "body", "pants", "gloves", "boots", "head"]
 const SLOT_NAMES := {"weapon": "Vũ khí", "body": "Áo", "pants": "Quần", "gloves": "Găng", "boots": "Giày", "head": "Rada"}
 
@@ -230,6 +244,40 @@ func upgrade_equipped(slot: String) -> String:
 	inventory_changed.emit()
 	stats_changed.emit()
 	return "Nâng cấp thất bại. Trang bị giữ nguyên cấp, nguyên liệu và xu đã tiêu hao."
+
+
+func buy_item(item_id: String, amount: int = 1) -> String:
+	if amount <= 0 or not ITEM_DB.has(item_id) or not SHOP_BUY_PRICES.has(item_id):
+		return "Vật phẩm này không được bán tại cửa hàng."
+	var total_price := int(SHOP_BUY_PRICES[item_id]) * amount
+	if coins < total_price:
+		return "Không đủ xu. Cần %d xu." % total_price
+	coins -= total_price
+	inventory[item_id] = int(inventory.get(item_id, 0)) + amount
+	inventory_changed.emit()
+	stats_changed.emit()
+	return "Đã mua %s x%d với giá %d xu." % [String(ITEM_DB[item_id]["name"]), amount, total_price]
+
+func sell_item(item_id: String, amount: int = 1) -> String:
+	if amount <= 0 or not ITEM_DB.has(item_id) or int(inventory.get(item_id, 0)) < amount:
+		return "Không đủ vật phẩm để bán."
+	var base_price := int(SHOP_BUY_PRICES.get(item_id, 20))
+	var sell_price := maxi(1, int(floor(float(base_price) * 0.35)))
+	var total_price := sell_price * amount
+	inventory[item_id] = int(inventory[item_id]) - amount
+	if int(inventory[item_id]) <= 0:
+		inventory.erase(item_id)
+	coins += total_price
+	inventory_changed.emit()
+	stats_changed.emit()
+	return "Đã bán %s x%d, nhận %d xu." % [String(ITEM_DB[item_id]["name"]), amount, total_price]
+
+func get_shop_catalog() -> Array:
+	var catalog: Array = []
+	for item_id in SHOP_BUY_PRICES.keys():
+		if ITEM_DB.has(item_id):
+			catalog.append({"id": String(item_id), "name": String(ITEM_DB[item_id]["name"]), "price": int(SHOP_BUY_PRICES[item_id])})
+	return catalog
 
 func get_inventory_entries() -> Array:
 	var entries: Array = []
