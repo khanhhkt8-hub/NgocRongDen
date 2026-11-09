@@ -9,6 +9,7 @@ var inventory_label: Label
 var inventory_panel: PanelContainer
 var inventory_content: VBoxContainer
 var inventory_message: Label
+var upgrade_slot_select: OptionButton
 var player_ref: Node
 const MOBILE_CONTROLS = preload("res://scripts/mobile_controls.gd")
 const WORLD_SYSTEM = preload("res://scripts/world_system.gd")
@@ -141,6 +142,21 @@ func _build_inventory_panel(layer: CanvasLayer) -> void:
 	equipment_label.name = "EquipmentLabel"
 	equipment_label.add_theme_font_size_override("font_size", 15)
 	root.add_child(equipment_label)
+	var upgrade_title := Label.new()
+	upgrade_title.text = "CƯỜNG HÓA TRANG BỊ"
+	upgrade_title.add_theme_color_override("font_color", Color(1.0, 0.72, 0.42))
+	root.add_child(upgrade_title)
+	var upgrade_row := HBoxContainer.new()
+	root.add_child(upgrade_row)
+	upgrade_slot_select = OptionButton.new()
+	upgrade_slot_select.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	for slot_name in ["Vũ khí", "Áo", "Quần", "Găng", "Giày", "Rada"]:
+		upgrade_slot_select.add_item(slot_name)
+	upgrade_row.add_child(upgrade_slot_select)
+	var upgrade_button := Button.new()
+	upgrade_button.text = "NÂNG CẤP"
+	upgrade_button.pressed.connect(_on_upgrade_pressed)
+	upgrade_row.add_child(upgrade_button)
 	var item_title := Label.new()
 	item_title.text = "VẬT PHẨM TRONG TÚI — chạm để trang bị / sử dụng"
 	item_title.add_theme_color_override("font_color", Color(1.0, 0.84, 0.45))
@@ -189,6 +205,14 @@ func _refresh_inventory_panel() -> void:
 		row.pressed.connect(_on_inventory_item_pressed.bind(item_id))
 		inventory_content.add_child(row)
 	inventory_label.text = player_ref.inventory_summary()
+
+func _on_upgrade_pressed() -> void:
+	if not is_instance_valid(player_ref):
+		return
+	var slots := ["weapon", "body", "pants", "gloves", "boots", "head"]
+	var slot := slots[upgrade_slot_select.selected]
+	inventory_message.text = player_ref.upgrade_equipped(slot)
+	_refresh_inventory_panel()
 
 func _on_inventory_item_pressed(item_id: String) -> void:
 	var result: String = player_ref.item_action(item_id)
