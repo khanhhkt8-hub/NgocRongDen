@@ -6,125 +6,224 @@ var zone_label: Label
 var quest_label: Label
 var message_label: Label
 var inventory_label: Label
+var inventory_panel: PanelContainer
+var inventory_content: VBoxContainer
+var inventory_message: Label
+var player_ref: Node
 const MOBILE_CONTROLS = preload("res://scripts/mobile_controls.gd")
 const WORLD_SYSTEM = preload("res://scripts/world_system.gd")
 
 func _ready() -> void:
-    _build_environment()
-    _build_hud()
-    var world = WORLD_SYSTEM.new()
-    world.name = "WorldSystem"
-    add_child(world)
-    world.world_status_changed.connect(_on_world_status_changed)
-    world.zone_changed.connect(_on_zone_changed)
-    var mobile_controls = MOBILE_CONTROLS.new()
-    mobile_controls.name = "MobileControls"
-    add_child(mobile_controls)
-    var player = get_node_or_null("Player")
-    if player:
-        player.stats_changed.connect(_on_stats_changed)
-        player.inventory_changed.connect(_on_inventory_changed)
-        _on_stats_changed()
-        _on_inventory_changed()
+	_build_environment()
+	_build_hud()
+	var world = WORLD_SYSTEM.new()
+	world.name = "WorldSystem"
+	add_child(world)
+	world.world_status_changed.connect(_on_world_status_changed)
+	world.zone_changed.connect(_on_zone_changed)
+	var mobile_controls = MOBILE_CONTROLS.new()
+	mobile_controls.name = "MobileControls"
+	add_child(mobile_controls)
+	player_ref = get_node_or_null("Player")
+	if player_ref:
+		player_ref.stats_changed.connect(_on_stats_changed)
+		player_ref.inventory_changed.connect(_on_inventory_changed)
+		_on_stats_changed()
+		_on_inventory_changed()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("inventory_toggle"):
+		_toggle_inventory()
+		get_viewport().set_input_as_handled()
 
 func _build_environment() -> void:
-    var sky := Polygon2D.new()
-    sky.name = "Sky"
-    sky.polygon = PackedVector2Array(Vector2(0, 0), Vector2(1280, 0), Vector2(1280, 660), Vector2(0, 660))
-    sky.color = Color(0.07, 0.12, 0.22, 1)
-    add_child(sky)
-    move_child(sky, 0)
-    var ground_visual := Polygon2D.new()
-    ground_visual.name = "GroundVisual"
-    ground_visual.polygon = PackedVector2Array(Vector2(-160, 0), Vector2(1440, 0), Vector2(1440, 90), Vector2(-160, 90))
-    ground_visual.position = Vector2(0, 660)
-    ground_visual.color = Color(0.18, 0.29, 0.25, 1)
-    add_child(ground_visual)
-    var sun := Polygon2D.new()
-    sun.polygon = _circle_points(42, 32)
-    sun.position = Vector2(1060, 135)
-    sun.color = Color(1.0, 0.72, 0.32, 1)
-    add_child(sun)
+	var sky := Polygon2D.new()
+	sky.name = "Sky"
+	sky.polygon = PackedVector2Array(Vector2(0, 0), Vector2(1280, 0), Vector2(1280, 660), Vector2(0, 660))
+	sky.color = Color(0.07, 0.12, 0.22, 1)
+	add_child(sky)
+	move_child(sky, 0)
+	var ground_visual := Polygon2D.new()
+	ground_visual.name = "GroundVisual"
+	ground_visual.polygon = PackedVector2Array(Vector2(-160, 0), Vector2(1440, 0), Vector2(1440, 90), Vector2(-160, 90))
+	ground_visual.position = Vector2(0, 660)
+	ground_visual.color = Color(0.18, 0.29, 0.25, 1)
+	add_child(ground_visual)
+	var sun := Polygon2D.new()
+	sun.polygon = _circle_points(42, 32)
+	sun.position = Vector2(1060, 135)
+	sun.color = Color(1.0, 0.72, 0.32, 1)
+	add_child(sun)
 
 func _circle_points(radius: float, count: int) -> PackedVector2Array:
-    var points := PackedVector2Array()
-    for i in range(count):
-        var angle := TAU * float(i) / float(count)
-        points.append(Vector2(cos(angle), sin(angle)) * radius)
-    return points
+	var points := PackedVector2Array()
+	for i in range(count):
+		var angle := TAU * float(i) / float(count)
+		points.append(Vector2(cos(angle), sin(angle)) * radius)
+	return points
 
 func _build_hud() -> void:
-    var layer := CanvasLayer.new()
-    add_child(layer)
-    status_label = Label.new()
-    status_label.position = Vector2(24, 18)
-    status_label.add_theme_font_size_override("font_size", 20)
-    status_label.add_theme_color_override("font_color", Color.WHITE)
-    layer.add_child(status_label)
-    zone_label = Label.new()
-    zone_label.position = Vector2(24, 142)
-    zone_label.add_theme_font_size_override("font_size", 20)
-    zone_label.add_theme_color_override("font_color", Color(0.60, 0.92, 1.0))
-    layer.add_child(zone_label)
-    quest_label = Label.new()
-    quest_label.position = Vector2(24, 172)
-    quest_label.add_theme_font_size_override("font_size", 18)
-    quest_label.add_theme_color_override("font_color", Color(1.0, 0.88, 0.48))
-    layer.add_child(quest_label)
-    message_label = Label.new()
-    message_label.position = Vector2(24, 204)
-    message_label.add_theme_font_size_override("font_size", 16)
-    message_label.add_theme_color_override("font_color", Color(0.85, 0.95, 1.0))
-    layer.add_child(message_label)
-    inventory_label = Label.new()
-    inventory_label.position = Vector2(24, 238)
-    inventory_label.add_theme_font_size_override("font_size", 16)
-    inventory_label.add_theme_color_override("font_color", Color(0.70, 1.0, 0.76))
-    layer.add_child(inventory_label)
-    hint_label = Label.new()
-    hint_label.position = Vector2(24, 670)
-    hint_label.text = "A/D: Di chuyen    SPACE: Nhay    J: Danh    K: Chuong KI    E: Tuong tac"
-    if OS.has_feature("mobile"):
-        hint_label.text = "Dung nut cam ung de di chuyen va chien dau. Den gan NPC de tuong tac."
-    hint_label.add_theme_font_size_override("font_size", 15)
-    hint_label.add_theme_color_override("font_color", Color(0.75, 0.88, 1))
-    layer.add_child(hint_label)
-    var title := Label.new()
-    title.position = Vector2(950, 24)
-    title.text = "NGOC RONG DEN"
-    title.add_theme_font_size_override("font_size", 25)
-    title.add_theme_color_override("font_color", Color(0.35, 0.88, 1))
-    layer.add_child(title)
+	var layer := CanvasLayer.new()
+	add_child(layer)
+	status_label = Label.new()
+	status_label.position = Vector2(24, 18)
+	status_label.add_theme_font_size_override("font_size", 20)
+	status_label.add_theme_color_override("font_color", Color.WHITE)
+	layer.add_child(status_label)
+	zone_label = Label.new()
+	zone_label.position = Vector2(24, 142)
+	zone_label.add_theme_font_size_override("font_size", 20)
+	zone_label.add_theme_color_override("font_color", Color(0.60, 0.92, 1.0))
+	layer.add_child(zone_label)
+	quest_label = Label.new()
+	quest_label.position = Vector2(24, 172)
+	quest_label.add_theme_font_size_override("font_size", 18)
+	quest_label.add_theme_color_override("font_color", Color(1.0, 0.88, 0.48))
+	layer.add_child(quest_label)
+	message_label = Label.new()
+	message_label.position = Vector2(24, 204)
+	message_label.add_theme_font_size_override("font_size", 16)
+	message_label.add_theme_color_override("font_color", Color(0.85, 0.95, 1.0))
+	layer.add_child(message_label)
+	inventory_label = Label.new()
+	inventory_label.position = Vector2(24, 238)
+	inventory_label.add_theme_font_size_override("font_size", 16)
+	inventory_label.add_theme_color_override("font_color", Color(0.70, 1.0, 0.76))
+	layer.add_child(inventory_label)
+	hint_label = Label.new()
+	hint_label.position = Vector2(24, 670)
+	hint_label.text = "A/D: Di chuyen    SPACE: Nhay    J: Danh    K: Chuong KI    E: Tuong tac    I: Tui do"
+	if OS.has_feature("mobile"):
+		hint_label.text = "Dung nut cam ung de di chuyen va chien dau. Nhan TUI DO de xem trang bi."
+	hint_label.add_theme_font_size_override("font_size", 15)
+	hint_label.add_theme_color_override("font_color", Color(0.75, 0.88, 1))
+	layer.add_child(hint_label)
+	var title := Label.new()
+	title.position = Vector2(950, 24)
+	title.text = "NGOC RONG DEN"
+	title.add_theme_font_size_override("font_size", 25)
+	title.add_theme_color_override("font_color", Color(0.35, 0.88, 1))
+	layer.add_child(title)
+	_build_inventory_panel(layer)
+
+func _build_inventory_panel(layer: CanvasLayer) -> void:
+	inventory_panel = PanelContainer.new()
+	inventory_panel.position = Vector2(650, 95)
+	inventory_panel.size = Vector2(590, 540)
+	inventory_panel.custom_minimum_size = Vector2(590, 540)
+	inventory_panel.visible = false
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.025, 0.055, 0.10, 0.96)
+	style.border_color = Color(0.35, 0.75, 1.0, 1)
+	style.set_border_width_all(3)
+	style.set_corner_radius_all(10)
+	inventory_panel.add_theme_stylebox_override("panel", style)
+	layer.add_child(inventory_panel)
+	var root := VBoxContainer.new()
+	root.add_theme_constant_override("separation", 8)
+	inventory_panel.add_child(root)
+	var header := HBoxContainer.new()
+	root.add_child(header)
+	var title := Label.new()
+	title.text = "TÚI ĐỒ & TRANG BỊ"
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title.add_theme_font_size_override("font_size", 23)
+	header.add_child(title)
+	var close := Button.new()
+	close.text = "ĐÓNG"
+	close.pressed.connect(func(): inventory_panel.visible = false)
+	header.add_child(close)
+	var equipment_title := Label.new()
+	equipment_title.text = "TRANG BỊ ĐANG MẶC"
+	equipment_title.add_theme_color_override("font_color", Color(0.55, 0.88, 1))
+	root.add_child(equipment_title)
+	var equipment_label := Label.new()
+	equipment_label.name = "EquipmentLabel"
+	equipment_label.add_theme_font_size_override("font_size", 15)
+	root.add_child(equipment_label)
+	var item_title := Label.new()
+	item_title.text = "VẬT PHẨM TRONG TÚI — chạm để trang bị / sử dụng"
+	item_title.add_theme_color_override("font_color", Color(1.0, 0.84, 0.45))
+	root.add_child(item_title)
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(0, 270)
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root.add_child(scroll)
+	inventory_content = VBoxContainer.new()
+	inventory_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(inventory_content)
+	inventory_message = Label.new()
+	inventory_message.text = "Vật phẩm nguyên liệu sẽ được dùng trong hệ thống nâng cấp ở bước tiếp theo."
+	inventory_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	root.add_child(inventory_message)
+	_refresh_inventory_panel()
+
+func _toggle_inventory() -> void:
+	if inventory_panel:
+		inventory_panel.visible = not inventory_panel.visible
+		if inventory_panel.visible:
+			_refresh_inventory_panel()
+
+func _refresh_inventory_panel() -> void:
+	if not inventory_content or not is_instance_valid(player_ref):
+		return
+	for child in inventory_content.get_children():
+		child.queue_free()
+	var equipment_label = inventory_panel.find_child("EquipmentLabel", true, false)
+	if equipment_label:
+		equipment_label.text = player_ref.get_equipment_summary()
+	var entries: Array = player_ref.get_inventory_entries()
+	if entries.is_empty():
+		var empty := Label.new()
+		empty.text = "Túi đồ đang trống. Hãy tiêu diệt quái để tìm vật phẩm."
+		inventory_content.add_child(empty)
+	for entry in entries:
+		var item_data: Dictionary = entry["data"]
+		var item_id := String(entry["id"])
+		var row := Button.new()
+		row.custom_minimum_size = Vector2(0, 54)
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.text = "%s  x%d\n%s" % [item_data["name"], entry["count"], item_data.get("description", "")]
+		row.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		row.add_theme_font_size_override("font_size", 15)
+		row.pressed.connect(_on_inventory_item_pressed.bind(item_id))
+		inventory_content.add_child(row)
+	inventory_label.text = player_ref.inventory_summary()
+
+func _on_inventory_item_pressed(item_id: String) -> void:
+	var result: String = player_ref.item_action(item_id)
+	inventory_message.text = result
+	_refresh_inventory_panel()
 
 func _on_stats_changed() -> void:
-    var player = get_node_or_null("Player")
-    if not player or not is_instance_valid(status_label):
-        return
-    status_label.text = "HP %d/%d    KI %d/%d\nCap %d    Suc manh %d    Tan cong %d    Giap %d\nTiem nang: %d    EXP: %d/%d" % [
-        player.hp, player.max_hp, player.ki, player.max_ki,
-        player.level, player.power, player.strength + player.weapon_bonus, player.defense,
-        player.potential, player.exp_points, player.level * 100
-    ]
+	if not player_ref or not is_instance_valid(status_label):
+		return
+	status_label.text = "HP %d/%d    KI %d/%d\nCap %d    Suc manh %d    Tan cong %d    Giap %d\nTiem nang: %d    EXP: %d/%d" % [
+		player_ref.hp, player_ref.max_hp, player_ref.ki, player_ref.max_ki,
+		player_ref.level, player_ref.power, player_ref.strength + player_ref.weapon_bonus, player_ref.defense + player_ref.equipment_defense,
+		player_ref.potential, player_ref.exp_points, player_ref.level * 100
+	]
 
 func _on_inventory_changed() -> void:
-    var player = get_node_or_null("Player")
-    if player and is_instance_valid(inventory_label):
-        inventory_label.text = player.inventory_summary()
+	if player_ref and is_instance_valid(inventory_label):
+		inventory_label.text = player_ref.inventory_summary()
+		if inventory_panel and inventory_panel.visible:
+			_refresh_inventory_panel()
 
 func _on_world_status_changed(zone_name: String, quest_text: String, message: String) -> void:
-    if is_instance_valid(zone_label):
-        zone_label.text = "Khu vuc: " + zone_name
-        quest_label.text = quest_text
-        message_label.text = message
+	if is_instance_valid(zone_label):
+		zone_label.text = "Khu vuc: " + zone_name
+		quest_label.text = quest_text
+		message_label.text = message
 
 func _on_zone_changed(_zone_index: int) -> void:
-    var world = get_node_or_null("WorldSystem")
-    if not world:
-        return
-    var zone: Dictionary = world.get_zone_data()
-    var sky = get_node_or_null("Sky")
-    var ground = get_node_or_null("GroundVisual")
-    if sky:
-        sky.color = zone["sky"]
-    if ground:
-        ground.color = zone["ground"]
+	var world = get_node_or_null("WorldSystem")
+	if not world:
+		return
+	var zone: Dictionary = world.get_zone_data()
+	var sky = get_node_or_null("Sky")
+	var ground = get_node_or_null("GroundVisual")
+	if sky:
+		sky.color = zone["sky"]
+	if ground:
+		ground.color = zone["ground"]
