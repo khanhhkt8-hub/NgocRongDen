@@ -13,7 +13,7 @@ func _ready() -> void:
     var player = get_node_or_null("Player")
     if player:
         player.stats_changed.connect(_on_stats_changed)
-        _on_stats_changed(player.hp, player.max_hp, player.exp_points, player.level)
+        _on_stats_changed()
 
 func _build_environment() -> void:
     var sky := Polygon2D.new()
@@ -47,16 +47,16 @@ func _build_hud() -> void:
 
     status_label = Label.new()
     status_label.position = Vector2(24, 18)
-    status_label.add_theme_font_size_override("font_size", 24)
+    status_label.add_theme_font_size_override("font_size", 22)
     status_label.add_theme_color_override("font_color", Color(1, 1, 1))
     layer.add_child(status_label)
 
     hint_label = Label.new()
-    hint_label.position = Vector2(24, 62)
-    hint_label.text = "A/D: Di chuyển    SPACE: Nhảy    J: Bắn năng lượng"
+    hint_label.position = Vector2(24, 112)
+    hint_label.text = "A/D: Di chuyển    SPACE: Nhảy    J: Đánh thường    K: Chưởng KI"
     if OS.has_feature("mobile"):
-        hint_label.text = "Dùng các nút cảm ứng ở hai góc màn hình để điều khiển"
-    hint_label.add_theme_font_size_override("font_size", 18)
+        hint_label.text = "Dùng các nút cảm ứng ở hai góc màn hình để chiến đấu"
+    hint_label.add_theme_font_size_override("font_size", 17)
     hint_label.add_theme_color_override("font_color", Color(0.75, 0.88, 1))
     layer.add_child(hint_label)
 
@@ -67,6 +67,12 @@ func _build_hud() -> void:
     title.add_theme_color_override("font_color", Color(0.35, 0.88, 1))
     layer.add_child(title)
 
-func _on_stats_changed(hp: int, max_hp: int, exp_points: int, level: int) -> void:
-    if is_instance_valid(status_label):
-        status_label.text = "HP: %d/%d     Cấp: %d     EXP: %d/%d" % [hp, max_hp, level, exp_points, level * 100]
+func _on_stats_changed() -> void:
+    var player = get_node_or_null("Player")
+    if not player or not is_instance_valid(status_label):
+        return
+    status_label.text = "HP %d/%d    KI %d/%d\nCấp %d    Sức mạnh %d    Sức đánh %d    Giáp %d\nTiềm năng: %d    EXP: %d/%d" % [
+        player.hp, player.max_hp, player.ki, player.max_ki,
+        player.level, player.power, player.strength, player.defense,
+        player.potential, player.exp_points, player.level * 100
+    ]
