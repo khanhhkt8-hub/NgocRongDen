@@ -27,9 +27,18 @@ This is a mandatory product requirement for NGOC RONG DEN. The target is the rec
 
 Match the *systems, categories, player flow, balance philosophy, and interaction patterns* of the reference game as closely as practical. Do not copy its exact item names, sprites, icons, UI artwork, maps, dialogue, proprietary data tables, sounds, or source code. NGOC RONG DEN must use original names and original assets while preserving the familiar gameplay structure.
 
+## Implementation progress (source committed, not yet Godot-tested)
+
+- [x] Starter item database with weapon, body, pants, gloves, boots, scanner, HP/KI consumables, and upgrade materials.
+- [x] Functional equipment slots and stat recalculation.
+- [x] Inventory/equipment panel with item counts and descriptions; tap/click to equip or consume.
+- [x] Monster drops include starter gear categories and recovery items at low probabilities.
+- [ ] Illustrated item icons/grid, detailed comparison tooltips, selling, and drag-and-drop.
+- [ ] Equipment upgrade interface, shops, boss-specific tables, and persistence.
+
 ## Current implementation gap (must not be misrepresented)
 
-The current prototype only has basic counters and a small random loot set (coins, crystals, upgrade stones, and one starter weapon). It does NOT yet have the full equipment slots, item grid, proper tooltips, item use/sell, data-driven drop tables, upgrade interface, shop, or player trading. These are required future implementation tasks, not completed features.
+The current prototype now has basic functional gear slots, an inventory panel, equip/use actions, and expanded starter drops. It still does NOT have final item artwork/icons, drag-and-drop, item selling, upgrade interface, shop, boss-specific drop tables, persistence, or player trading. Changes are committed but have not yet been run or validated in Godot.
 
 ## Acceptance checklist
 
