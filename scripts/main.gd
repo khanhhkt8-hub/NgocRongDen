@@ -157,6 +157,18 @@ func _build_inventory_panel(layer: CanvasLayer) -> void:
 	upgrade_button.text = "NÂNG CẤP"
 	upgrade_button.pressed.connect(_on_upgrade_pressed)
 	upgrade_row.add_child(upgrade_button)
+	var shop_title := Label.new()
+	shop_title.text = "CỬA HÀNG — mua vật phẩm bằng xu"
+	shop_title.add_theme_color_override("font_color", Color(0.55, 1.0, 0.70))
+	root.add_child(shop_title)
+	var shop_row := HBoxContainer.new()
+	root.add_child(shop_row)
+	for shop_item in [{"id": "binh_hp_nho", "label": "Đậu HP 30"}, {"id": "binh_ki_nho", "label": "Nước KI 30"}, {"id": "da_nang_cap", "label": "Đá 80"}, {"id": "tinh_thach", "label": "Thạch 180"}]:
+		var buy_button := Button.new()
+		buy_button.text = shop_item["label"]
+		buy_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		buy_button.pressed.connect(_on_buy_item_pressed.bind(String(shop_item["id"])))
+		shop_row.add_child(buy_button)
 	var item_title := Label.new()
 	item_title.text = "VẬT PHẨM TRONG TÚI — chạm để trang bị / sử dụng"
 	item_title.add_theme_color_override("font_color", Color(1.0, 0.84, 0.45))
@@ -196,15 +208,36 @@ func _refresh_inventory_panel() -> void:
 	for entry in entries:
 		var item_data: Dictionary = entry["data"]
 		var item_id := String(entry["id"])
-		var row := Button.new()
+		var row := HBoxContainer.new()
 		row.custom_minimum_size = Vector2(0, 54)
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.text = "%s  x%d\n%s" % [item_data["name"], entry["count"], item_data.get("description", "")]
-		row.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		row.add_theme_font_size_override("font_size", 15)
-		row.pressed.connect(_on_inventory_item_pressed.bind(item_id))
+		var item_button := Button.new()
+		item_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		item_button.text = "%s  x%d\n%s" % [item_data["name"], entry["count"], item_data.get("description", "")]
+		item_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		item_button.add_theme_font_size_override("font_size", 15)
+		item_button.pressed.connect(_on_inventory_item_pressed.bind(item_id))
+		row.add_child(item_button)
+		var sell_button := Button.new()
+		sell_button.text = "BÁN 1"
+		sell_button.custom_minimum_size = Vector2(76, 0)
+		sell_button.pressed.connect(_on_sell_item_pressed.bind(item_id))
+		row.add_child(sell_button)
 		inventory_content.add_child(row)
 	inventory_label.text = player_ref.inventory_summary()
+
+
+func _on_buy_item_pressed(item_id: String) -> void:
+	if not is_instance_valid(player_ref):
+		return
+	inventory_message.text = player_ref.buy_item(item_id, 1)
+	_refresh_inventory_panel()
+
+func _on_sell_item_pressed(item_id: String) -> void:
+	if not is_instance_valid(player_ref):
+		return
+	inventory_message.text = player_ref.sell_item(item_id, 1)
+	_refresh_inventory_panel()
 
 func _on_upgrade_pressed() -> void:
 	if not is_instance_valid(player_ref):
