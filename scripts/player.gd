@@ -44,6 +44,8 @@ var equipment_defense: int = 0
 var equipment_hp: int = 0
 var equipment_ki: int = 0
 var equipment_power: int = 0
+var potential_hp_bonus: int = 0
+var potential_ki_bonus: int = 0
 var facing: int = 1
 var attack_timer: float = 0.0
 var melee_timer: float = 0.0
@@ -86,7 +88,7 @@ func melee_attack() -> void:
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		var offset: Vector2 = enemy.global_position - global_position
 		if absf(offset.x) <= 78.0 and absf(offset.y) <= 72.0 and signf(offset.x) == float(facing):
-			enemy.take_hit(strength + weapon_bonus + equipment_attack + level * 2)
+			enemy.take_hit(strength + weapon_bonus + level * 2)
 
 func fire_energy() -> void:
 	if attack_timer > 0.0 or ki < 8:
@@ -96,7 +98,7 @@ func fire_energy() -> void:
 	stats_changed.emit()
 	var shot = ENERGY_BALL.instantiate()
 	shot.direction = facing
-	shot.damage = (strength + weapon_bonus + equipment_attack) * 2 + level * 3
+	shot.damage = (strength + weapon_bonus) * 2 + level * 3
 	shot.global_position = global_position + Vector2(34.0 * facing, -12.0)
 	get_tree().current_scene.add_child(shot)
 
@@ -177,8 +179,8 @@ func _refresh_equipment_stats() -> void:
 			equipment_hp += int(data.get("hp", 0))
 			equipment_ki += int(data.get("ki", 0))
 			equipment_power += int(data.get("power", 0))
-	max_hp = 120 + (level - 1) * 12 + equipment_hp
-	max_ki = 100 + (level - 1) * 8 + equipment_ki
+	max_hp = 120 + (level - 1) * 12 + equipment_hp + potential_hp_bonus
+	max_ki = 100 + (level - 1) * 8 + equipment_ki + potential_ki_bonus
 	hp = mini(hp, max_hp)
 	ki = mini(ki, max_ki)
 	weapon_bonus = equipment_attack
@@ -238,11 +240,11 @@ func spend_potential(stat_name: String, points: int) -> bool:
 	potential -= points
 	match stat_name:
 		"hp":
-			hp = mini(max_hp, hp + points * 5)
-			max_hp += points * 5
+			potential_hp_bonus += points * 5
+			hp = mini(max_hp + points * 5, hp + points * 5)
 		"ki":
-			ki = mini(max_ki, ki + points * 5)
-			max_ki += points * 5
+			potential_ki_bonus += points * 5
+			ki = mini(max_ki + points * 5, ki + points * 5)
 		"strength":
 			strength += points
 		"defense":
