@@ -25,7 +25,7 @@ jobs:
             SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -name sdkmanager -type f | head -n 1)"
           fi
           yes | "$SDKMANAGER" --licenses >/dev/null
-          "$SDKMANAGER" "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          "$SDKMANAGER" "cmdline-tools;latest" "platform-tools" "platforms;android-33" "build-tools;33.0.2" "cmake;3.10.2.4988404" "ndk;23.2.8568313"
 
       - name: Set up Godot 4.2.2 and Android export templates
         run: |
@@ -52,7 +52,10 @@ jobs:
 
           [resource]
           export/android/android_sdk_path = "$ANDROID_HOME"
+          export/android/java_sdk_path = "$JAVA_HOME"
           export/android/debug_keystore = "$HOME/.android/debug.keystore"
+          export/android/debug_keystore_user = "androiddebugkey"
+          export/android/debug_keystore_pass = "android"
           EOF
           echo "ANDROID_HOME=$ANDROID_HOME"
           test -x "$ANDROID_HOME/platform-tools/adb"
