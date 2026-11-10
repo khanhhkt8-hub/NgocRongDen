@@ -18,13 +18,16 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Install Android SDK packages
-        run: sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+        run: |
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMANAGER" ]; then
+            SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -name sdkmanager -type f | head -n 1)"
+          fi
+          yes | "$SDKMANAGER" --licenses >/dev/null
+          "$SDKMANAGER" "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
-      - name: Set up Godot 4.2.2
+      - name: Set up Godot 4.2.2 and Android export templates
         run: |
           curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot/releases/download/4.2.2-stable/Godot_v4.2.2-stable_linux.x86_64.zip
           unzip godot.zip -d godot-bin
@@ -32,7 +35,9 @@ jobs:
           sudo install -m 0755 godot-bin/Godot_v4.2.2-stable_linux.x86_64 /usr/local/bin/godot
           curl -L --fail --retry 3 -o templates.tpz https://github.com/godotengine/godot/releases/download/4.2.2-stable/Godot_v4.2.2-stable_export_templates.tpz
           mkdir -p "$HOME/.local/share/godot/export_templates/4.2.2.stable"
-          unzip -q templates.tpz -d "$HOME/.local/share/godot/export_templates/4.2.2.stable"
+          mkdir templates-unpacked
+          unzip -q templates.tpz -d templates-unpacked
+          cp templates-unpacked/templates/* "$HOME/.local/share/godot/export_templates/4.2.2.stable/"
 
       - name: Create temporary Android debug keystore
         run: |
