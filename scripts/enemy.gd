@@ -45,53 +45,53 @@ func take_hit(damage: int) -> void:
         global_position = Vector2(randf_range(650.0, 1100.0), 565.0)
 
 func _drop_loot() -> void:
-	if randf() > 0.72:
-		return
-	var drop = LOOT_DROP.instantiate()
-	var roll := randi_range(0, 99)
-	if roll < 37:
-		drop.item_id = "dong_xu"
-		drop.display_name = "Xu"
-		drop.amount = randi_range(3, 12)
-	elif roll < 50:
-		drop.item_id = "tinh_thach"
-		drop.display_name = "Tinh thạch"
-		drop.amount = 1
-	elif roll < 63:
-		drop.item_id = "da_nang_cap"
-		drop.display_name = "Đá nâng cấp"
-		drop.amount = 1
-	elif roll < 71:
-		drop.item_id = "binh_hp_nho"
-		drop.display_name = "Đậu hồi phục nhỏ"
-		drop.amount = 1
-	elif roll < 79:
-		drop.item_id = "binh_ki_nho"
-		drop.display_name = "Nước hồi KI"
-		drop.amount = 1
-	elif roll < 84:
-		drop.item_id = "ao_tap_su"
-		drop.display_name = "Áo tập sự"
-		drop.amount = 1
-	elif roll < 88:
-		drop.item_id = "quan_tap_su"
-		drop.display_name = "Quần tập sự"
-		drop.amount = 1
-	elif roll < 92:
-		drop.item_id = "gang_tap_su"
-		drop.display_name = "Găng tập sự"
-		drop.amount = 1
-	elif roll < 95:
-		drop.item_id = "giay_tap_su"
-		drop.display_name = "Giày tập sự"
-		drop.amount = 1
-	elif roll < 98:
-		drop.item_id = "rada_tap_su"
-		drop.display_name = "Rada tập sự"
-		drop.amount = 1
-	else:
-		drop.item_id = "kiem_tan_thu"
-		drop.display_name = "Kiếm tập sự"
-		drop.amount = 1
-	drop.global_position = global_position
-	get_tree().current_scene.add_child(drop)
+    if randf() > 0.72:
+        return
+    var drop = LOOT_DROP.instantiate()
+    var roll := randi_range(0, 99)
+    if roll < 37:
+        drop.item_id = "dong_xu"
+        drop.display_name = "Xu"
+        drop.amount = randi_range(3, 12)
+    elif roll < 50:
+        drop.item_id = "tinh_thach"
+        drop.display_name = "Tinh thạch"
+        drop.amount = 1
+    elif roll < 63:
+        drop.item_id = "da_nang_cap"
+        drop.display_name = "Đá nâng cấp"
+        drop.amount = 1
+    elif roll < 71:
+        drop.item_id = "binh_hp_nho"
+        drop.display_name = "Đậu hồi phục nhỏ"
+        drop.amount = 1
+    elif roll < 79:
+        drop.item_id = "binh_ki_nho"
+        drop.display_name = "Nước hồi KI"
+        drop.amount = 1
+    elif roll < 84:
+        drop.item_id = "ao_tap_su"
+        drop.display_name = "Áo tập sự"
+        drop.amount = 1
+    elif roll < 88:
+        drop.item_id = "quan_tap_su"
+        drop.display_name = "Quần tập sự"
+        drop.amount = 1
+    elif roll < 92:
+        drop.item_id = "gang_tap_su"
+        drop.display_name = "Găng tập sự"
+        drop.amount = 1
+    elif roll < 95:
+        drop.item_id = "giay_tap_su"
+        drop.display_name = "Giày tập sự"
+        drop.amount = 1
+    elif roll < 98:
+        drop.item_id = "rada_tap_su"
+        drop.display_name = "Rada tập sự"
+        drop.amount = 1
+    else:
+        drop.item_id = "kiem_tan_thu"
+        drop.display_name = "Kiếm tập sự"
+        drop.amount = 1
+    drop.global_position = global_position
+    get_tree().current_scene.add_child(drop)
