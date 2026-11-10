@@ -14,7 +14,7 @@ func _ready() -> void:
     _add_tap_button("ĐÁNH", Vector2(-252, -118), Vector2(108, 88), "attack")
     _add_tap_button("CHƯỞNG", Vector2(-132, -118), Vector2(120, 88), "ki_blast")
     _add_tap_button("NÓI / NHẬN Q", Vector2(-132, -218), Vector2(120, 78), "interact")
-	_add_tap_button("TÚI ĐỒ", Vector2(-252, -218), Vector2(108, 78), "inventory_toggle")
+    _add_tap_button("TÚI ĐỒ", Vector2(-252, -218), Vector2(108, 78), "inventory_toggle")
 
 func _add_hold_button(caption: String, offset: Vector2, button_size: Vector2, action: String) -> void:
     var button := _make_button(caption, button_size)
