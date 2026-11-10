@@ -44,11 +44,24 @@ jobs:
           mkdir -p "$HOME/.android"
           keytool -genkeypair -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey -keypass android -dname "CN=Android Debug,O=Android,C=US" -keyalg RSA -validity 10000
 
+      - name: Configure Godot Android export environment
+        run: |
+          mkdir -p "$HOME/.config/godot" build
+          cat > "$HOME/.config/godot/editor_settings-4.tres" <<EOF
+          [gd_resource type="EditorSettings" format=3]
+
+          [resource]
+          export/android/android_sdk_path = "$ANDROID_HOME"
+          export/android/debug_keystore = "$HOME/.android/debug.keystore"
+          EOF
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          test -x "$ANDROID_HOME/platform-tools/adb"
+          test -f "$HOME/.android/debug.keystore"
+
       - name: Import and export debug APK
         run: |
-          mkdir -p build
-          godot --headless --editor --path . --quit
-          godot --headless --path . --export-debug "Android" build/NgocRongDen-debug.apk
+          godot --headless --editor --path . --quit --verbose
+          godot --headless --path . --export-debug "Android" build/NgocRongDen-debug.apk --verbose
           test -s build/NgocRongDen-debug.apk
 
       - name: Upload APK artifact
