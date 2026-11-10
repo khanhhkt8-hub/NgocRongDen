@@ -18,7 +18,7 @@ func _ready() -> void:
     add_child(shape)
     var icon := Polygon2D.new()
     icon.name = "Icon"
-    icon.polygon = PackedVector2Array(Vector2(0, -15), Vector2(13, 0), Vector2(0, 15), Vector2(-13, 0))
+    icon.polygon = PackedVector2Array([Vector2(0, -15), Vector2(13, 0), Vector2(0, 15), Vector2(-13, 0)])
     icon.color = _item_color()
     add_child(icon)
     body_entered.connect(_on_body_entered)
