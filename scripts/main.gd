@@ -40,13 +40,13 @@ func _unhandled_input(event: InputEvent) -> void:
 func _build_environment() -> void:
 	var sky := Polygon2D.new()
 	sky.name = "Sky"
-	sky.polygon = PackedVector2Array(Vector2(0, 0), Vector2(1280, 0), Vector2(1280, 660), Vector2(0, 660))
+	sky.polygon = PackedVector2Array([Vector2(0, 0), Vector2(1280, 0), Vector2(1280, 660), Vector2(0, 660)])
 	sky.color = Color(0.07, 0.12, 0.22, 1)
 	add_child(sky)
 	move_child(sky, 0)
 	var ground_visual := Polygon2D.new()
 	ground_visual.name = "GroundVisual"
-	ground_visual.polygon = PackedVector2Array(Vector2(-160, 0), Vector2(1440, 0), Vector2(1440, 90), Vector2(-160, 90))
+	ground_visual.polygon = PackedVector2Array([Vector2(-160, 0), Vector2(1440, 0), Vector2(1440, 90), Vector2(-160, 90)])
 	ground_visual.position = Vector2(0, 660)
 	ground_visual.color = Color(0.18, 0.29, 0.25, 1)
 	add_child(ground_visual)
@@ -243,7 +243,7 @@ func _on_upgrade_pressed() -> void:
 	if not is_instance_valid(player_ref):
 		return
 	var slots := ["weapon", "body", "pants", "gloves", "boots", "head"]
-	var slot := slots[upgrade_slot_select.selected]
+	var slot: String = slots[upgrade_slot_select.selected]
 	inventory_message.text = player_ref.upgrade_equipped(slot)
 	_refresh_inventory_panel()
 
