@@ -1,0 +1,55 @@
+name: Android APK build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK packages
+        run: sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Set up Godot 4.2.2
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot/releases/download/4.2.2-stable/Godot_v4.2.2-stable_linux.x86_64.zip
+          unzip godot.zip -d godot-bin
+          chmod +x godot-bin/Godot_v4.2.2-stable_linux.x86_64
+          sudo install -m 0755 godot-bin/Godot_v4.2.2-stable_linux.x86_64 /usr/local/bin/godot
+          curl -L --fail --retry 3 -o templates.tpz https://github.com/godotengine/godot/releases/download/4.2.2-stable/Godot_v4.2.2-stable_export_templates.tpz
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.2.2.stable"
+          unzip -q templates.tpz -d "$HOME/.local/share/godot/export_templates/4.2.2.stable"
+
+      - name: Create temporary Android debug keystore
+        run: |
+          mkdir -p "$HOME/.android"
+          keytool -genkeypair -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey -keypass android -dname "CN=Android Debug,O=Android,C=US" -keyalg RSA -validity 10000
+
+      - name: Import and export debug APK
+        run: |
+          mkdir -p build
+          godot --headless --editor --path . --quit
+          godot --headless --path . --export-debug "Android" build/NgocRongDen-debug.apk
+          test -s build/NgocRongDen-debug.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NgocRongDen-Android-debug
+          path: build/NgocRongDen-debug.apk
+          if-no-files-found: error
+          retention-days: 14
