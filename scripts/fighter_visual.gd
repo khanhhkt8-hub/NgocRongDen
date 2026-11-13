@@ -9,6 +9,7 @@ func _process(delta: float) -> void:
 	var fighter := get_parent()
 	if not is_instance_valid(fighter):
 		return
+	scale.x = -1.0 if fighter.facing < 0 else 1.0
 	phase += delta * (8.0 if absf(fighter.velocity.x) > 12.0 and fighter.is_on_floor() else 2.2)
 	hit_flash = maxf(0.0, hit_flash - delta)
 	queue_redraw()
