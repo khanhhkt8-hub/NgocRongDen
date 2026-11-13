@@ -18,10 +18,10 @@ func _draw() -> void:
 	var fighter := get_parent()
 	if not is_instance_valid(fighter):
 		return
-	var moving := absf(fighter.velocity.x) > 12.0 and fighter.is_on_floor()
-	var airborne := not fighter.is_on_floor()
-	var attacking := fighter.melee_timer > 0.25
-	var casting := fighter.attack_timer > 0.15
+	var moving: bool = absf(fighter.velocity.x) > 12.0 and fighter.is_on_floor()
+	var airborne: bool = not fighter.is_on_floor()
+	var attacking: bool = fighter.melee_timer > 0.25
+	var casting: bool = fighter.attack_timer > 0.15
 	var step := sin(phase) * (11.0 if moving else 1.5)
 	var bob := absf(sin(phase)) * 3.0 if moving else 0.0
 	var skin := Color("#f2bd91")
