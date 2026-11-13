@@ -45,7 +45,7 @@ func take_hit(damage: int) -> void:
             players[0].gain_exp(exp_reward)
         _drop_loot()
         hp = max_hp
-        global_position = Vector2(randf_range(650.0, 1100.0), 565.0)
+        global_position = Vector2(randf_range(950.0, 2450.0), 565.0)
 
 func _drop_loot() -> void:
     if randf() > 0.72:
