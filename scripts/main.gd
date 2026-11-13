@@ -40,19 +40,19 @@ func _unhandled_input(event: InputEvent) -> void:
 func _build_environment() -> void:
 	var sky := Polygon2D.new()
 	sky.name = "Sky"
-	sky.polygon = PackedVector2Array([Vector2(0, 0), Vector2(1280, 0), Vector2(1280, 660), Vector2(0, 660)])
+	sky.polygon = PackedVector2Array([Vector2(0, 0), Vector2(3200, 0), Vector2(3200, 660), Vector2(0, 660)])
 	sky.color = Color(0.07, 0.12, 0.22, 1)
 	add_child(sky)
 	move_child(sky, 0)
 	var ground_visual := Polygon2D.new()
 	ground_visual.name = "GroundVisual"
-	ground_visual.polygon = PackedVector2Array([Vector2(-160, 0), Vector2(1440, 0), Vector2(1440, 90), Vector2(-160, 90)])
+	ground_visual.polygon = PackedVector2Array([Vector2(-160, 0), Vector2(3360, 0), Vector2(3360, 90), Vector2(-160, 90)])
 	ground_visual.position = Vector2(0, 660)
 	ground_visual.color = Color(0.18, 0.29, 0.25, 1)
 	add_child(ground_visual)
 	var sun := Polygon2D.new()
 	sun.polygon = _circle_points(42, 32)
-	sun.position = Vector2(1060, 135)
+	sun.position = Vector2(2550, 135)
 	sun.color = Color(1.0, 0.72, 0.32, 1)
 	add_child(sun)
 
