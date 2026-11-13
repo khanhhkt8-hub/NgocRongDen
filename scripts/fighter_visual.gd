@@ -6,7 +6,7 @@ var phase := 0.0
 var hit_flash := 0.0
 
 func _process(delta: float) -> void:
-	var fighter := get_parent()
+	var fighter = get_parent()
 	if not is_instance_valid(fighter):
 		return
 	scale.x = -1.0 if fighter.facing < 0 else 1.0
