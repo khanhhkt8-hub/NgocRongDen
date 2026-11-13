@@ -23,14 +23,17 @@ func _physics_process(delta: float) -> void:
     if players.size() > 0:
         var player = players[0]
         var distance: float = global_position.distance_to(player.global_position)
-        if distance > 48.0:
-            velocity.x = signf(player.global_position.x - global_position.x) * move_speed
+        if distance <= 720.0:
+            if distance > 48.0:
+                velocity.x = signf(player.global_position.x - global_position.x) * move_speed
+            else:
+                velocity.x = 0.0
+                attack_timer -= delta
+                if attack_timer <= 0.0:
+                    player.take_damage(contact_damage)
+                    attack_timer = 1.0
         else:
-            velocity.x = 0.0
-            attack_timer -= delta
-            if attack_timer <= 0.0:
-                player.take_damage(contact_damage)
-                attack_timer = 1.0
+            velocity.x = move_toward(velocity.x, 0.0, move_speed * delta * 5.0)
     move_and_slide()
 
 func take_hit(damage: int) -> void:
@@ -42,7 +45,7 @@ func take_hit(damage: int) -> void:
             players[0].gain_exp(exp_reward)
         _drop_loot()
         hp = max_hp
-        global_position = Vector2(randf_range(650.0, 1100.0), 565.0)
+        global_position = Vector2(randf_range(950.0, 2450.0), 565.0)
 
 func _drop_loot() -> void:
     if randf() > 0.72:

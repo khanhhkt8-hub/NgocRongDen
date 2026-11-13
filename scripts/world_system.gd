@@ -15,7 +15,7 @@ var quest_kills := 0
 var portal_locked := false
 var player: Node2D
 var npc_position := Vector2(365, 565)
-var portal_position := Vector2(1170, 565)
+var portal_position := Vector2(2700, 565)
 var status_message := "Den gap Nguoi dan duong va nhan E de nhan nhiem vu."
 
 func _ready() -> void:
@@ -32,7 +32,7 @@ func _process(_delta: float) -> void:
         return
     if Input.is_action_just_pressed("interact") and player.global_position.distance_to(npc_position) < 125.0:
         _interact_with_npc()
-    if player.global_position.x >= 1160.0 and not portal_locked:
+    if player.global_position.x >= 2700.0 and not portal_locked:
         _travel_to_next_zone()
 
 func _draw() -> void:
@@ -75,7 +75,7 @@ func _travel_to_next_zone() -> void:
         player.global_position = Vector2(120, 565)
         player.velocity = Vector2.ZERO
     for enemy in get_tree().get_nodes_in_group("enemies"):
-        enemy.global_position = Vector2(randf_range(650.0, 1050.0), 565.0)
+        enemy.global_position = Vector2(randf_range(950.0, 2450.0), 565.0)
         var zone: Dictionary = ZONES[zone_index]
         enemy.max_hp = int(zone["enemy_hp"])
         enemy.hp = enemy.max_hp
