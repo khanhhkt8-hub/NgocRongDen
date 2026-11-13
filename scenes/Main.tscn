@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" path="res://scenes/Enemy.tscn" id="3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape_ground"]
-size = Vector2(1600, 60)
+size = Vector2(3200, 60)
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1")
@@ -16,8 +16,20 @@ position = Vector2(190, 565)
 [node name="Enemy" parent="." instance=ExtResource("3")]
 position = Vector2(820, 565)
 
+[node name="Enemy2" parent="." instance=ExtResource("3")]
+position = Vector2(1250, 565)
+
+[node name="Enemy3" parent="." instance=ExtResource("3")]
+position = Vector2(1680, 565)
+
+[node name="Enemy4" parent="." instance=ExtResource("3")]
+position = Vector2(2100, 565)
+
+[node name="Enemy5" parent="." instance=ExtResource("3")]
+position = Vector2(2450, 565)
+
 [node name="Ground" type="StaticBody2D" parent="."]
-position = Vector2(640, 660)
+position = Vector2(1600, 660)
 
 [node name="GroundShape" type="CollisionShape2D" parent="Ground"]
 shape = SubResource("RectangleShape_ground")
